@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝懒工作室</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #333;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #333;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 5px;
+        }
+        ul {
+            text-align: left;
+            margin-left: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #member-info {
+            font-size: 18px;
+            color: #ccc; /* 浅灰色 */
+            background-color: #333;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: none;
+         }
+// 检查本地存储中是否存在登录状态
+function checkLoginStatus() {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        // 自动登录用户的逻辑
+        const savedUsername = localStorage.getItem('loggedInUsername');
+        document.getElementById('loginMessage').innerText = '欢迎回来，' + savedUsername + '。';
+        document.getElementById('member-info').innerText = '成员名称：' + savedUsername;
+        document.getElementById('member-info').style.display = 'block';
+    } else {
+        console.log('用户未登录');
+    }
+}
+
+// 在用户成功登录后保存登录状态到 localStorage
+function saveLoginStatus(username) {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('loggedInUsername', username);
+}
+
+// 调用检查登录状态函数
+checkLoginStatus();
+    </style>
+</head>
+<body>
+    <header>
+        <img src="llgzs.jpg" alt="蓝懒工作室" style="width: 100px;">
+    </header>
+    <div class="container">
+        <h1>欢迎来到蓝懒工作室的官方网站</h1>
+        
+        <h2 onclick="toggleSection('about')">介绍<span class="circle"></span></h2>
+        <div id="about">
+            <h2 onclick="toggleSection('details')">关于我们<span class="circle"></span></h2>
+            <div id="details">
+                <p>关于我们的详细信息：</p>
+                <ul>
+                    <li>蓝懒工作室是一个开发游戏相关的新团队，欢迎您的加入！</li>
+                    <li>QQ审核群：973672089</li>
+                    <li>当您进入QQ审核群时，管理员和群主会观察您在群中的举动与观察您有没有任何相关的特长，当您的要求完全合格时即可加入正式工作室主群！</li>
+                </ul>
+            </div>
+            <h2 onclick="toggleSection('member-level')">成员<span class="circle"></span></h2>
+            <div id="member-level">
+                <p>我们的成员：</p>
+                <ul>
+                    <li>主工作室成员：蓝懒，Chara，群中唯一至尊火焰骷髅，黄瓜豪，lescroissants等</li>
+                    <li>审核区成员：成伶治sans</li>
+                    <li>频道成员：无</li>
+                    <li>群聊/频道管理员："Hui hui——Lin xi"，我丢传，Chara，群中唯一至尊火焰骷髅，黄瓜豪，lescroissants，power</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>登录</h2>
+        <input type="text" id="username" placeholder="用户名">
+        <input type="password" id="password" placeholder="密码">
+        <button onclick="login()">登录</button>
+        <p id="loginMessage"></p>
+
+        <h2>注册</h2>
+        <input type="text" id="newUsername" placeholder="新用户名">
+        <input type="password" id="newPassword" placeholder="新密码">
+        <button onclick="register()">注册</button>
+        <p id="registerMessage"></p>
+
+        <div id="member-info" style="position: absolute; top: 10px; right: 10px; background-color: #333; color: #fff; padding: 5px 10px; border-radius: 5px; display: none;"></div>
+    </div>
+
+    <script>
+        let users = [
+            { username: '蓝懒', password: 'bluelazystudio54181452' },
+            { username: '火焰骷髅', password: 'llgzsbqwyzzhykl0002' },
+            { username: '成伶治sans', password: 'llgzsclzsans0003' },
+        ];
+
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = section.style.display === 'block' ? 'none' : 'block';
+                if (sectionId === 'about' && section.style.display === 'block') {
+                    document.getElementById('details').style.display = 'none';
+                    document.getElementById('member-level').style.display = 'none';
+                }
+            } else {
+                console.error("找不到指定的部分: " + sectionId);
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                document.getElementById('loginMessage').innerText = '欢迎回来，' + username + '。';
+                document.getElementById('member-info').innerText = '成员名称：' + user.username;
+                document.getElementById('member-info').style.display = 'block';
+            } else {
+                document.getElementById('loginMessage').innerText = '用户名或密码错误，请检查是否失误';
+            }
+        }
+
+        function register() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (users.some(user => user.username === newUsername)) {
+                document.getElementById('registerMessage').innerText = '用户名已存在，请选择其他用户名';
+            } else {
+                users.push({ username: newUsername, password: newPassword });
+                document.getElementById('registerMessage').innerText = '注册成功，您已是蓝懒工作室的一员了！';
+
+            }
+        }
+    </script>
+</body>
+</html>
